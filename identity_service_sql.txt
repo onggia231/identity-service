@@ -1,0 +1,5 @@
+create database identity_service;
+drop database identity_service;
+
+use identity_service;
+select * from user;
