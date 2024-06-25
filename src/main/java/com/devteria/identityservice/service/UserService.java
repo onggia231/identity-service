@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,21 +39,16 @@ public class UserService {
 //    PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreationRequest request) {
-        User user = userMapper.toUser(request);
-//        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-//        HashSet<Role> roles = new HashSet<>();
-//        roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
-//
-//        user.setRoles(roles);
-
-        try {
-            user = userRepository.save(user);
-        } catch (DataIntegrityViolationException exception){
+        if(userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
-        }
 
-        return userMapper.toUserResponse(user);
+        User user = userMapper.toUser(request);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public UserResponse getMyInfo() {
