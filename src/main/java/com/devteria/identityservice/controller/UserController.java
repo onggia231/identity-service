@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.devteria.identityservice.dto.request.ApiResponse;
@@ -34,6 +35,11 @@ public class UserController {
 
     @GetMapping
     ApiResponse<List<UserResponse>> getUsers() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        log.info("Username: {}", authentication.getName());
+        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getUsers())
                 .build();
@@ -46,7 +52,8 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/my-info")
+    // get user dang nhap
+    @GetMapping("/myInfo")
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
