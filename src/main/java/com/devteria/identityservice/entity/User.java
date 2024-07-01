@@ -22,14 +22,12 @@ public class User {
 
     @Column(name = "username", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String username;
+
     String password;
     String firstName;
     LocalDate dob;
     String lastName;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    Set<String> roles;
-
-//    @ManyToMany
-//    Set<Role> roles;
+    @ManyToMany
+    Set<Role> roles;
 }
