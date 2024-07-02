@@ -105,8 +105,13 @@ public class AuthenticationService {
 
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" "); // vi oauth2 phan cach nhau bang dau cach
-//        if(!CollectionUtils.isEmpty(user.getRoles()))
-//            user.getRoles().forEach(stringJoiner::add);
+
+        if (!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getName()); // custom thay vi dung mac dinh SCOPE_ thi dung ROLE_ cho quen thuoc
+                if (!CollectionUtils.isEmpty(role.getPermissions()))
+                    role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+            });
         return stringJoiner.toString();
     }
 }

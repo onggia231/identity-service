@@ -1,33 +1,27 @@
 package com.devteria.identityservice.service;
 
-import java.util.HashSet;
-import java.util.List;
-
-import com.devteria.identityservice.enums.Role;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-//import com.devteria.identityservice.constant.PredefinedRole;
 import com.devteria.identityservice.dto.request.UserCreationRequest;
 import com.devteria.identityservice.dto.request.UserUpdateRequest;
 import com.devteria.identityservice.dto.response.UserResponse;
-//import com.devteria.identityservice.entity.Role;
 import com.devteria.identityservice.entity.User;
+import com.devteria.identityservice.enums.Role;
 import com.devteria.identityservice.exception.AppException;
 import com.devteria.identityservice.exception.ErrorCode;
 import com.devteria.identityservice.mapper.UserMapper;
-//import com.devteria.identityservice.repository.RoleRepository;
+import com.devteria.identityservice.repository.RoleRepository;
 import com.devteria.identityservice.repository.UserRepository;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +29,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserService {
     UserRepository userRepository;
-//    RoleRepository roleRepository;
+    RoleRepository roleRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreationRequest request) {
 
-        if(userRepository.existsByUsername(request.getUsername()))
+        if (userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = userMapper.toUser(request);
@@ -69,10 +63,10 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         userMapper.updateUser(user, request);
-//        user.setPassword(passwordEncoder.encode(request.getPassword()));
-//
-//        var roles = roleRepository.findAllById(request.getRoles());
-//        user.setRoles(new HashSet<>(roles));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -82,7 +76,8 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //    @PreAuthorize("hasAnyAuthority('APPROVE_POST')") //// hasAnyAuthority dung cho truong hop khong la ROLE_
+    @PreAuthorize("hasRole('ADMIN')") //// no se tim authority la ROLE_ADMIN de map con APPROVE_POST ko duoc
     public List<UserResponse> getUsers() {
         log.info("In method get Users");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
