@@ -15,6 +15,6 @@ public interface UserMapper {
 
     UserResponse toUserResponse(User user);
 
-    @Mapping(target = "lastName", ignore = true)
+    @Mapping(target = "roles", ignore = true) // vi List<String> roles; nen can ignore
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 }
