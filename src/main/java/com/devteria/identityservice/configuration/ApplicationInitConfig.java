@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,11 +21,18 @@ import java.util.HashSet;
 @Slf4j
 public class ApplicationInitConfig {
 
-//    @Autowired  // su dung @RequiredArgsConstructo va FieldDefaults ko can  @Autowired
+    //    @Autowired  // su dung @RequiredArgsConstructo va FieldDefaults ko can  @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // ConditionalOnProperty doc file application.yaml va test.properties xem prefix la spring thi xet:
+    // neu la value = "spring.datasource.driverClassName" + havingValue = "com.mysql.cj.jdbc.Driver"
+    // thi Bean ko duoc khoi tao
     @Bean
+    @ConditionalOnProperty(prefix = "spring",
+            value = "spring.datasource.driverClassName",
+            havingValue = "com.mysql.cj.jdbc.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository) {
+        log.info("Init application...");
         return args -> {
             if (userRepository.findByUsername("admin").isEmpty()) {
                 var roles = new HashSet<String>();
@@ -39,5 +47,6 @@ public class ApplicationInitConfig {
                 log.warn("admin user has been created with default password: admin, please change it");
             }
         };
+
     }
 }

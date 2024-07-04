@@ -1,7 +1,5 @@
 package com.devteria.identityservice.controller;
 
-import java.time.LocalDate;
-
 import com.devteria.identityservice.dto.request.UserCreationRequest;
 import com.devteria.identityservice.dto.response.UserResponse;
 import com.devteria.identityservice.service.UserService;
@@ -22,14 +20,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
+
 @Slf4j
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc // tao request toi controller
 @TestPropertySource("/test.properties")
+// @TestPropertySource("/test.properties") khai bao file test.properties de khi test no khong phu thuoc vao db local
+// ApplicationInitConfig config
 class UserControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private MockMvc mockMvc; // goi den api cua chung ta
 
     @MockBean
     private UserService userService;
@@ -60,26 +62,33 @@ class UserControllerTest {
     }
 
     @Test
-    //
+        // test truong hop request success
     void createUser_validRequest_success() throws Exception {
-        // GIVEN
+        // GIVEN - nhung du lieu dau vao da biet truoc va minh du doan no xay ra nhu vay
+        // request va userResponse chinh la GIVEN
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String content = objectMapper.writeValueAsString(request);
 
+        // Mockito.when dung khi userService goi den ham createUser no se khong goi den ham createUser ma tra truc tiep ve userResponse
+        // -> test Controller ham createUser se ko goi den ham trong Service (Test doc lap tung thang)
         Mockito.when(userService.createUser(ArgumentMatchers.any())).thenReturn(userResponse);
 
         // WHEN, THEN
+        // WHEN: Khi nao request api
+        // THEN: Khi request xay ra expect dieu gi
+        // mockMvc.perform tao request
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("code").value(1000))
+                // day la bat dau xu ly THEN expect
+                .andExpect(MockMvcResultMatchers.status().isOk()) // so sanh co tra ve code 200 ko
+                .andExpect(MockMvcResultMatchers.jsonPath("code").value(1000)) // so sanh co tra response 1000 ko
                 .andExpect(MockMvcResultMatchers.jsonPath("result.id").value("cf0600f538b3"));
     }
 
     @Test
-    //
+        // test truong hop request fail
     void createUser_usernameInvalid_fail() throws Exception {
         // GIVEN
         request.setUsername("joh");
@@ -91,6 +100,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
+                // So sanh: USERNAME_INVALID(1003, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(1003))
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("Username must be at least 4 characters"));

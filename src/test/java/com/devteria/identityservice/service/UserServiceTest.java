@@ -25,6 +25,8 @@ import com.devteria.identityservice.repository.UserRepository;
 
 @SpringBootTest
 @TestPropertySource("/test.properties")
+// @TestPropertySource("/test.properties") khai bao file test.properties de khi test no khong phu thuoc vao db local
+// ApplicationInitConfig config
 public class UserServiceTest {
     @Autowired
     private UserService userService;
