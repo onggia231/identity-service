@@ -1,10 +1,13 @@
 package com.devteria.identityservice.service;
 
-import com.devteria.identityservice.dto.request.UserCreationRequest;
-import com.devteria.identityservice.dto.response.UserResponse;
-import com.devteria.identityservice.entity.User;
-import com.devteria.identityservice.exception.AppException;
-import com.devteria.identityservice.repository.UserRepository;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,22 +17,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import com.devteria.identityservice.dto.request.UserCreationRequest;
+import com.devteria.identityservice.dto.response.UserResponse;
+import com.devteria.identityservice.entity.User;
+import com.devteria.identityservice.exception.AppException;
+import com.devteria.identityservice.repository.UserRepository;
 
 @SpringBootTest
 @TestPropertySource("/test.properties")
 public class UserServiceTest {
 
     //    @AutoConfigureMockMvc // tao request toi controller
-//    @TestPropertySource("/test.properties")
-//// @TestPropertySource("/test.properties") khai bao file test.properties de khi test no khong phu thuoc vao db local
-//// ApplicationInitConfig config
+    //    @TestPropertySource("/test.properties")
+    //// @TestPropertySource("/test.properties") khai bao file test.properties de khi test no khong phu thuoc vao db
+    // local
+    //// ApplicationInitConfig config
 
     @Autowired
     private UserService userService;

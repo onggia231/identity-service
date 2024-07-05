@@ -1,17 +1,19 @@
 package com.devteria.identityservice.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.devteria.identityservice.dto.request.PermissionRequest;
 import com.devteria.identityservice.dto.response.PermissionResponse;
 import com.devteria.identityservice.entity.Permission;
 import com.devteria.identityservice.mapper.PermissionMapper;
 import com.devteria.identityservice.repository.PermissionRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +37,4 @@ public class PermissionService {
     public void delete(String permission) {
         permissionRepository.deleteById(permission);
     }
-
 }
