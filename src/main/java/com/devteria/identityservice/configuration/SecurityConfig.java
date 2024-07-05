@@ -1,6 +1,5 @@
 package com.devteria.identityservice.configuration;
 
-import com.devteria.identityservice.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +14,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.devteria.identityservice.enums.Role;
 
 @Configuration
 @EnableWebSecurity
@@ -22,26 +22,31 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     // endpoint khong can authentication
-    private final String[] PUBLIC_ENDPOINTS = {"/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"};
+    private final String[] PUBLIC_ENDPOINTS = {
+        "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
+    };
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users")
-                        .hasRole(Role.ADMIN.name()) // voi endpoint la /users va SCOPE_ADMIN moi cho request
-                        .anyRequest().authenticated());
+        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, "/users")
+                .hasRole(Role.ADMIN.name()) // voi endpoint la /users va SCOPE_ADMIN moi cho request
+                .anyRequest()
+                .authenticated());
 
         // Khi thuc hien 1 request can khai them token
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer ->
-                                jwtConfigurer.decoder(customJwtDecoder)
-                                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // bat exception 401 neu authentication failed thi dieu huong di dau
-        );
+        httpSecurity.oauth2ResourceServer(
+                oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
+                                .decoder(customJwtDecoder)
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(
+                                new JwtAuthenticationEntryPoint()) // bat exception 401 neu authentication failed thi
+                // dieu huong di dau
+                );
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
@@ -56,7 +61,6 @@ public class SecurityConfig {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
-
         return jwtAuthenticationConverter;
     }
 
@@ -64,5 +68,4 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
-
 }

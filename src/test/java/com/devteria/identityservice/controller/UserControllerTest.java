@@ -24,11 +24,14 @@ import java.time.LocalDate;
 
 @Slf4j
 @SpringBootTest
-@AutoConfigureMockMvc // tao request toi controller
+@AutoConfigureMockMvc
 @TestPropertySource("/test.properties")
-// @TestPropertySource("/test.properties") khai bao file test.properties de khi test no khong phu thuoc vao db local
-// ApplicationInitConfig config
 class UserControllerTest {
+
+//    @AutoConfigureMockMvc // tao request toi controller
+//    @TestPropertySource("/test.properties")
+//// @TestPropertySource("/test.properties") khai bao file test.properties de khi test no khong phu thuoc vao db local
+//// ApplicationInitConfig config
 
     @Autowired
     private MockMvc mockMvc; // goi den api cua chung ta
