@@ -53,11 +53,15 @@ public class AuthenticationService {
         var token = request.getToken();
         boolean isValid = true;
 
+        // Doan comment off-on kia spotless se khong fomat code
+        // mvn spotless:apply de chay spotless
+        //spotless:off
         try {
             verifyToken(token);
         } catch (AppException e) {
             isValid = false;
         }
+        //spotless:on
 
         return IntrospectResponse.builder().valid(isValid).build();
     }
