@@ -20,6 +20,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
+    // tao Column unique thi khi co nhieu request tao user cung 1 luc se khong tao trung lap
+    // COLLATE utf8mb4_unicode_ci phan biet chu hoa chu thuong tao ngoc hay Ngoc dong thoi se ko duoc
     @Column(name = "username", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String username;
 
