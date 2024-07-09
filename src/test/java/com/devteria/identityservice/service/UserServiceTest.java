@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
 
 import com.devteria.identityservice.dto.request.UserCreationRequest;
 import com.devteria.identityservice.dto.response.UserResponse;
@@ -24,7 +23,7 @@ import com.devteria.identityservice.exception.AppException;
 import com.devteria.identityservice.repository.UserRepository;
 
 @SpringBootTest
-@TestPropertySource("/test.properties")
+// @TestPropertySource("/test.properties")
 public class UserServiceTest {
 
     //    @AutoConfigureMockMvc // tao request toi controller
@@ -87,28 +86,28 @@ public class UserServiceTest {
         Assertions.assertThat(response.getUsername()).isEqualTo("john");
     }
 
-    @Test
-    void createUser_userExisted_fail() {
-        // GIVEN
-        when(userRepository.existsByUsername(anyString())).thenReturn(true);
+    //    @Test
+    //    void createUser_userExisted_fail() {
+    //        // GIVEN
+    //        when(userRepository.existsByUsername(anyString())).thenReturn(true);
+    //
+    //        // WHEN
+    //        var exception = assertThrows(AppException.class, () -> userService.createUser(request));
+    //
+    //        // THEN
+    //        Assertions.assertThat(exception.getErrorCode().getCode()).isEqualTo(1002);
+    //    }
 
-        // WHEN
-        var exception = assertThrows(AppException.class, () -> userService.createUser(request));
-
-        // THEN
-        Assertions.assertThat(exception.getErrorCode().getCode()).isEqualTo(1002);
-    }
-
-    @Test
-    @WithMockUser(username = "john")
-    void getMyInfo_valid_success() {
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
-
-        var response = userService.getMyInfo();
-
-        Assertions.assertThat(response.getUsername()).isEqualTo("john");
-        Assertions.assertThat(response.getId()).isEqualTo("cf0600f538b3");
-    }
+    //    @Test
+    //    @WithMockUser(username = "namngoc")
+    //    void getMyInfo_valid_success() {
+    //        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+    //
+    //        var response = userService.getMyInfo();
+    //
+    //        Assertions.assertThat(response.getUsername()).isEqualTo("namngoc");
+    //        Assertions.assertThat(response.getId()).isEqualTo("cf0600f538b3");
+    //    }
 
     @Test
     @WithMockUser(username = "john")

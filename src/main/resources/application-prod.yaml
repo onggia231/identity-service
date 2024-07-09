@@ -1,0 +1,18 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /identity
+
+spring:
+  datasource:
+    url: ${DBMS_CONNECTION}
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    username: ${USERNAME}
+    password: ${DBMS_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+jwt:
+  valid-duration: 7200 # in second
+  refreshable-duration: 72000 # in seconds
