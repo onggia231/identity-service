@@ -45,12 +45,12 @@ public class ApplicationInitConfig {
         log.info("Initializing application.....");
         return args -> {
             if (userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
-                roleRepository.save(com.devteria.identityservice.entity.Role.builder()
+                roleRepository.save(Role.builder()
                         .name(PredefinedRole.USER_ROLE)
                         .description("User role")
                         .build());
 
-                com.devteria.identityservice.entity.Role adminRole = roleRepository.save(com.devteria.identityservice.entity.Role.builder()
+                Role adminRole = roleRepository.save(Role.builder()
                         .name(PredefinedRole.ADMIN_ROLE)
                         .description("Admin role")
                         .build());

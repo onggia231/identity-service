@@ -10,5 +10,5 @@ import com.devteria.identityservice.entity.Permission;
 public interface PermissionMapper {
     Permission toPermission(PermissionRequest request);
 
-    PermissionResponse toPermissonResponse(Permission permission);
+    PermissionResponse toPermissionResponse(Permission permission);
 }
