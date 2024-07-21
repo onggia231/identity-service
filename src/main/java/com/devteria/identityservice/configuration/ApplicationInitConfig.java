@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.HashSet;
 
 @Configuration
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Chỉ tạo constructor cho các trường final và @NonNull. Các trường không final hoặc không @NonNull sẽ không được bao gồm trong constructor này
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 // level = AccessLevel.PRIVATE tat ca cac truong private, makeFinal = true tat ca cac truong final
 @Slf4j
