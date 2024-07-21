@@ -19,5 +19,5 @@ public class InvalidatedToken {
     @Id
     String id;
 
-    Date expiryTime;
+    Date expiryTime; // Co ca thoi gian ngay thang nam gio phut giay
 }

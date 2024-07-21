@@ -27,7 +27,7 @@ public class User {
 
     String password;
     String firstName;
-    LocalDate dob;
+    LocalDate dob; // chi co ngay thang nam
     String lastName;
 
     @ManyToMany

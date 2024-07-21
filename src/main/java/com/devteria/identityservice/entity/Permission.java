@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Permission {
-    @Id
+    @Id // danh dau id cho class Permission
     String name;
 
     String description;
