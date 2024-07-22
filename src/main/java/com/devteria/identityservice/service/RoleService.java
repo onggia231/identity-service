@@ -29,7 +29,7 @@ public class RoleService {
     public RoleResponse create(RoleRequest request) {
         var role = roleMapper.toRole(request);
 
-        var permissions = permissionRepository.findAllById(request.getPermissions());
+        var permissions = permissionRepository.findAllById(request.getPermissions()); // get permissions tu RoleRequest
         role.setPermissions(new HashSet<>(permissions));
 
         role = roleRepository.save(role);

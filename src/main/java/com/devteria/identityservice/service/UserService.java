@@ -68,7 +68,8 @@ public class UserService {
 
         return userMapper.toUserResponse(user);
     }
-
+    // returnObject đại diện cho đối tượng trả về của phương thức, tức là một đối tượng UserResponse.
+    // authentication.name đại diện cho tên của người dùng hiện tại đã được xác thực.
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

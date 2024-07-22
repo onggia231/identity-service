@@ -24,9 +24,9 @@ public class PermissionService {
     PermissionMapper permissionMapper;
 
     public PermissionResponse create(PermissionRequest request) {
-        Permission permission = permissionMapper.toPermission(request);
-        permission = permissionRepository.save(permission);
-        return permissionMapper.toPermissionResponse(permission);
+        Permission permission = permissionMapper.toPermission(request); // convert request -> entity
+        permission = permissionRepository.save(permission); // save voi doi tuong entity
+        return permissionMapper.toPermissionResponse(permission); // return convert entity -> response
     }
 
     public List<PermissionResponse> getAll() {
