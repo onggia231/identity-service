@@ -35,14 +35,12 @@ public class ApplicationInitConfig {
     static final String ADMIN_PASSWORD = "admin";
 
     // ConditionalOnProperty doc file application.yaml va test.properties xem prefix la spring thi xet:
-    // neu la value = "spring.datasource.driverClassName" + havingValue = "com.mysql.cj.jdbc.Driver"
-    // thi Bean ko duoc khoi tao
     @Bean
     @ConditionalOnProperty(
             prefix = "spring",
             value = "datasource.driverClassName",
             havingValue = "com.mysql.cj.jdbc.Driver")
-    // kiem tra xem spring.datasource.driverClassName = com.mysql.cj.jdbc.Driver thi ham applicationRunner duoc hoat dong
+    // kiem tra xem (prefix + value) spring.datasource.driverClassName = (havingValue) com.mysql.cj.jdbc.Driver thi ham applicationRunner duoc hoat dong
     ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         log.info("Initializing application.....");
         return args -> {

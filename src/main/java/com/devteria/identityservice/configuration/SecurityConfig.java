@@ -18,10 +18,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-@EnableWebSecurity
 // Kích hoạt bảo mật web toàn diện, cấu hình các quyền truy cập và xác thực người dùng trên toàn bộ ứng dụng web.
-@EnableMethodSecurity
+@EnableWebSecurity
 // Kích hoạt bảo mật phương thức cho phép kiểm soát quyền truy cập ở mức phương thức cụ thể, sử dụng các chú thích như @PreAuthorize và @Secured.
+@EnableMethodSecurity
+
 public class SecurityConfig {
 
     // endpoint khong can authentication
@@ -76,6 +77,7 @@ public class SecurityConfig {
         return new CorsFilter(urlBasedCorsConfigurationSource);
     }
 
+    // Custom lai dinh dang cua jwt khong cho tien to mac dinh
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         // chuyển đổi các quyền từ JWT thành đối tượng GrantedAuthority của Spring Security.
@@ -94,11 +96,12 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
+    // được sử dụng để mã hóa (encode) và xác thực (verify) mật khẩu người dùng
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
-    // được sử dụng để mã hóa (encode) và xác thực (verify) mật khẩu người dùng
+
 }
 
 /*

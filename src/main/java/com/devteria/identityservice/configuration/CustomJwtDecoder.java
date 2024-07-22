@@ -21,7 +21,7 @@ public class CustomJwtDecoder implements JwtDecoder { // JwtDecoder: giải mã 
     @Value("${jwt.signerKey}")
     private String signerKey;
 
-    // Dùng @Autowired khi bạn muốn Spring tự động tiêm phụ thuộc vào các bean của bạn (Không cần khoi tao ham contructor de khai tham so authenticationService)
+    // Dùng @Autowired khi bạn muốn Spring tự động tiêm phụ thuộc vào các bean của bạn (Không cần khoi tao ham constructor de khai tham so authenticationService)
     // Nếu không sử dụng @Autowired thì khai báo kiểu Lombok với @RequiredArgsConstructor
     @Autowired
     private AuthenticationService authenticationService;
