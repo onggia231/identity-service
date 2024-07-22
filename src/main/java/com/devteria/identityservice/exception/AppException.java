@@ -1,5 +1,6 @@
 package com.devteria.identityservice.exception;
 
+// AppException de throw ra exception
 public class AppException extends RuntimeException {
 
     public AppException(ErrorCode errorCode) {
