@@ -11,7 +11,7 @@ import jakarta.validation.Payload;
 
 @Target({FIELD}) // chon ElementType.FIELD voi truong hop ap dung bien trong entity thoi
 @Retention(RUNTIME) // annotation duoc xu ly luc RUNTIME
-@Constraint(validatedBy = {DobValidator.class})
+@Constraint(validatedBy = {DobValidator.class}) // tro den class DobValidator chua logic validate
 public @interface DobConstraint {
     String message() default "Invalid date of birth";
 
