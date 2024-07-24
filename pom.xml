@@ -198,7 +198,7 @@
 					<execution>
 						<phase>compile</phase>
 						<goals>
-							<goal>apply</goal>
+							<goal>check</goal> <!-- spotless Ko tu dong format code ma chi check thoi -->
 						</goals>
 					</execution>
 				</executions>
