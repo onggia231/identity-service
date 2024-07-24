@@ -28,6 +28,7 @@ public class CustomJwtDecoder implements JwtDecoder { // JwtDecoder: giải mã 
 
     private NimbusJwtDecoder nimbusJwtDecoder = null; // một lớp trong Spring Security OAuth 2.0 được sử dụng để giải mã và xác thực JSON Web Tokens (JWT)
 
+    // Phương thức decode được triển khai từ giao diện JwtDecoder, có trách nhiệm giải mã token JWT
     @Override
     public Jwt decode(String token) throws JwtException {
 

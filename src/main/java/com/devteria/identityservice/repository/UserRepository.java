@@ -11,6 +11,8 @@ import com.devteria.identityservice.entity.User;
 public interface UserRepository extends JpaRepository<User, String> {
     boolean existsByUsername(String username);
 
+    // Optional tranh loi NullPointerException va no cấp các phương thức tiện ích để xử lý giá trị không tồn tại một cách an toàn và gọn gàng
+    // 1 so phuong thuc: isPresent, ifPresent, orElse, orElseGet, orElseThrow
     Optional<User> findByUsername(String username);
 }
 /*
