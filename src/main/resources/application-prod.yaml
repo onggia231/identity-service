@@ -1,18 +1,5 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /identity
-
-spring:
-  datasource:
-    url: ${DBMS_CONNECTION}
-    driverClassName: "com.mysql.cj.jdbc.Driver"
-    username: ${USERNAME}
-    password: ${DBMS_PASSWORD}
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+# application-product: là config cho product
+# muốn sử dụng application.yaml nào thì khai ở IdentityServiceApplication: -Dspring.profiles.active=prod
 jwt:
-  valid-duration: 7200 # in second
-  refreshable-duration: 72000 # in seconds
+  valid-duration: 3600 # in second
+  refreshable-duration: 36000 # in seconds
