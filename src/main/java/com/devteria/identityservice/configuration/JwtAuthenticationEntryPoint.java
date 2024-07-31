@@ -15,7 +15,8 @@ import com.devteria.identityservice.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    // AuthenticationEntryPoint xử lý các tình huống khi một người dùng cố gắng truy cập tài nguyên được bảo vệ mà chưa được xác thực.
+    // AuthenticationEntryPoint xử lý các tình huống khi một người dùng cố gắng truy cập tài nguyên được bảo vệ mà chưa
+    // được xác thực.
     // => Phương thức này được gọi khi một yêu cầu không được xác thực truy cập vào tài nguyên được bảo vệ
     @Override
     public void commence(
@@ -39,10 +40,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 }
 /*
 Nhiệm Vụ:
-    Xử Lý Lỗi 401: JwtAuthenticationEntryPoint là một bộ xử lý lỗi được kích hoạt khi người dùng không được xác thực.
-    Nó trả về mã lỗi HTTP 401 cùng với thông điệp lỗi JSON.
+	Xử Lý Lỗi 401: JwtAuthenticationEntryPoint là một bộ xử lý lỗi được kích hoạt khi người dùng không được xác thực.
+	Nó trả về mã lỗi HTTP 401 cùng với thông điệp lỗi JSON.
 Luồng Hoạt Động:
-    Nhận Lỗi Xác Thực: Khi người dùng không được xác thực, JwtAuthenticationEntryPoint được kích hoạt.
-    Thiết Lập Phản Hồi: Cài đặt mã trạng thái HTTP và tiêu đề của phản hồi.
-    Gửi Phản Hồi: Viết thông điệp lỗi vào phản hồi và gửi lại cho client.
+	Nhận Lỗi Xác Thực: Khi người dùng không được xác thực, JwtAuthenticationEntryPoint được kích hoạt.
+	Thiết Lập Phản Hồi: Cài đặt mã trạng thái HTTP và tiêu đề của phản hồi.
+	Gửi Phản Hồi: Viết thông điệp lỗi vào phản hồi và gửi lại cho client.
 */

@@ -1,16 +1,19 @@
 package com.devteria.identityservice.exception;
 
-import com.devteria.identityservice.dto.request.ApiResponse;
+import java.util.Map;
+import java.util.Objects;
+
 import jakarta.validation.ConstraintViolation;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.Map;
-import java.util.Objects;
+import com.devteria.identityservice.dto.request.ApiResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice // de xu ly ngoai le toan cuc cho cac controller
 @Slf4j
@@ -33,7 +36,9 @@ public class GlobalExceptionHandler {
     // custom loi muon tra ra (duoc dinh nghia ma loi o class ErrorCode)
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse> handlingAppException(AppException exception) {
-        ErrorCode errorCode = exception.getErrorCode(); // khi throw new AppException(ErrorCode.UNAUTHENTICATED) => get UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED)
+        ErrorCode errorCode = exception.getErrorCode(); // khi throw new AppException(ErrorCode.UNAUTHENTICATED) => get
+        // UNAUTHENTICATED(1006,
+        // "Unauthenticated", HttpStatus.UNAUTHORIZED)
         ApiResponse apiResponse = new ApiResponse();
 
         apiResponse.setCode(errorCode.getCode());
@@ -62,7 +67,8 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
         Map<String, Object> attributes = null;
         try {
-            // Cố gắng chuyển đổi key lỗi thành một giá trị của ErrorCode. Nếu key không hợp lệ, sẽ giữ nguyên errorCode là ErrorCode.INVALID_KEY.
+            // Cố gắng chuyển đổi key lỗi thành một giá trị của ErrorCode. Nếu key không hợp lệ, sẽ giữ nguyên errorCode
+            // là ErrorCode.INVALID_KEY.
             errorCode = ErrorCode.valueOf(enumKey);
 
             // Lấy các vi phạm ràng buộc từ kết quả ràng buộc (binding result) và lấy các thuộc tính của chúng
@@ -83,7 +89,8 @@ public class GlobalExceptionHandler {
 
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(
-                Objects.nonNull(attributes) // Nếu có thuộc tính (attributes), thông báo lỗi sẽ được tùy chỉnh bằng cách sử dụng phương thức mapAttribute.
+                Objects.nonNull(attributes) // Nếu có thuộc tính (attributes), thông báo lỗi sẽ được tùy chỉnh bằng cách
+                        // sử dụng phương thức mapAttribute.
                         ? mapAttribute(errorCode.getMessage(), attributes)
                         : errorCode.getMessage());
 

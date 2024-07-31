@@ -11,7 +11,8 @@ import com.devteria.identityservice.entity.User;
 public interface UserRepository extends JpaRepository<User, String> {
     boolean existsByUsername(String username);
 
-    // Optional tranh loi NullPointerException va no cấp các phương thức tiện ích để xử lý giá trị không tồn tại một cách an toàn và gọn gàng
+    // Optional tranh loi NullPointerException va no cấp các phương thức tiện ích để xử lý giá trị không tồn tại một
+    // cách an toàn và gọn gàng
     // 1 so phuong thuc: isPresent, ifPresent, orElse, orElseGet, orElseThrow
     Optional<User> findByUsername(String username);
 }
@@ -20,10 +21,10 @@ public interface UserRepository extends JpaRepository<User, String> {
 A) Các phương thức cơ bản từ JpaRepository bao gồm:
 S save(S entity): Lưu hoặc cập nhật một entity.
 Iterable<S> saveAll(Iterable<S> entities): Lưu tất cả các entity.
-        Optional<T> findById(ID id): Tìm một entity theo khóa chính.
+		Optional<T> findById(ID id): Tìm một entity theo khóa chính.
 boolean existsById(ID id): Kiểm tra sự tồn tại của entity theo khóa chính.
 Iterable<T> findAll(): Lấy tất cả các entity.
-        Iterable<T> findAllById(Iterable<ID> ids): Lấy tất cả các entity theo danh sách khóa chính.
+		Iterable<T> findAllById(Iterable<ID> ids): Lấy tất cả các entity theo danh sách khóa chính.
 long count(): Đếm số lượng các entity.
 void deleteById(ID id): Xóa entity theo khóa chính.
 void delete(T entity): Xóa một entity.

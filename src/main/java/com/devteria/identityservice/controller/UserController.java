@@ -27,7 +27,8 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) { // @Valid la valid ben entity
+    ApiResponse<UserResponse> createUser(
+            @RequestBody @Valid UserCreationRequest request) { // @Valid la valid ben entity
         return ApiResponse.<UserResponse>builder()
                 .result(userService.createUser(request))
                 .build();

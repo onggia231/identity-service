@@ -24,6 +24,8 @@ public class UserCreationRequest {
     String firstName;
     String lastName;
 
-    @DobConstraint(min = 18, message = "INVALID_DOB") // DobConstraint custom, INVALID_DOB duoc mo ta ma loi o class ErrorCode
+    @DobConstraint(
+            min = 18,
+            message = "INVALID_DOB") // DobConstraint custom, INVALID_DOB duoc mo ta ma loi o class ErrorCode
     LocalDate dob;
 }

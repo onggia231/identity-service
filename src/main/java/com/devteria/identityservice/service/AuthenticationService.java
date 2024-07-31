@@ -1,5 +1,18 @@
 package com.devteria.identityservice.service;
 
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.StringJoiner;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.devteria.identityservice.dto.request.AuthenticationRequest;
 import com.devteria.identityservice.dto.request.IntrospectRequest;
 import com.devteria.identityservice.dto.request.LogoutRequest;
@@ -17,27 +30,17 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-// Chỉ tạo constructor cho các trường final và @NonNull. Các trường không final hoặc không @NonNull sẽ không được bao gồm trong constructor này
+// Chỉ tạo constructor cho các trường final và @NonNull. Các trường không final hoặc không @NonNull sẽ không được bao
+// gồm trong constructor này
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
@@ -109,33 +112,39 @@ public class AuthenticationService {
 
     // verified token check xem token da bi sua doi hay het han chua hay ton tai trong bang InvalidatedToken
     private SignedJWT verifyToken(String token, boolean isRefresh) throws ParseException, JOSEException {
-        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes()); // Đây là bước quan trọng để xác minh chữ ký của token
+        JWSVerifier verifier =
+                new MACVerifier(SIGNER_KEY.getBytes()); // Đây là bước quan trọng để xác minh chữ ký của token
 
-        SignedJWT signedJWT = SignedJWT.parse(token); // Chuyển đổi chuỗi token thành một đối tượng SignedJWT để dễ dàng truy cập các phần của token như claims, chữ ký, v.v.
+        SignedJWT signedJWT = SignedJWT.parse(
+                token); // Chuyển đổi chuỗi token thành một đối tượng SignedJWT để dễ dàng truy cập các phần của token
+        // như claims, chữ ký, v.v.
         // check thoi gian expityTime
         // isRefresh = true -> verify de refresh token (REFRESHABLE_DURATION de them thoi gian cho token)
-        // isRefresh = false -> verify de cho authentication or introspect ( dung thoi gian het han duoc chi dinh trong token)
+        // isRefresh = false -> verify de cho authentication or introspect ( dung thoi gian het han duoc chi dinh trong
+        // token)
         Date expityTime = (isRefresh)
                 ? new Date(signedJWT
-                .getJWTClaimsSet()
-                .getIssueTime()
-                .toInstant()
-                .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
-                .toEpochMilli())
+                        .getJWTClaimsSet()
+                        .getIssueTime()
+                        .toInstant()
+                        .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                        .toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
         // verified token check xem token da bi sua doi hay het han chua
         var verified = signedJWT.verify(verifier);
         // kiem tra xem het thoi gian token va valid token chuan chua
         if (!(verified && expityTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        // Kiểm tra xem token có tồn tại trong invalidatedTokenRepository (tức là đã bị đánh dấu là không hợp lệ) hay không
+        // Kiểm tra xem token có tồn tại trong invalidatedTokenRepository (tức là đã bị đánh dấu là không hợp lệ) hay
+        // không
         if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         return signedJWT;
     }
 
-    // Khi ma gan het han token se goi api refreshToken de sinh ra 1 token moi, khi ay dung token moi de tiep tuc su dung
+    // Khi ma gan het han token se goi api refreshToken de sinh ra 1 token moi, khi ay dung token moi de tiep tuc su
+    // dung
     public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         // - kiem tra hieu luc cua token
         var signedJWT = verifyToken(request.getToken(), true);
@@ -170,7 +179,8 @@ public class AuthenticationService {
                 .claim("scope", buildScope(user))
                 .build();
 
-        Payload payload = new Payload(jwtClaimsSet.toJSONObject()); // Chuyển đổi các claim thành đối tượng JSONObject và tạo payload từ đó
+        Payload payload = new Payload(
+                jwtClaimsSet.toJSONObject()); // Chuyển đổi các claim thành đối tượng JSONObject và tạo payload từ đó
 
         JWSObject jwsObject = new JWSObject(header, payload); // Tạo một đối tượng JWSObject với header và payload.
 
@@ -188,15 +198,16 @@ public class AuthenticationService {
     }
 
     private String buildScope(User user) {
-        StringJoiner stringJoiner = new StringJoiner(" "); // vi oauth2 phan cach nhau bang dau cach, để nối các phần tử.
+        StringJoiner stringJoiner =
+                new StringJoiner(" "); // vi oauth2 phan cach nhau bang dau cach, để nối các phần tử.
 
         if (!CollectionUtils.isEmpty(user.getRoles())) // check role
-            user.getRoles().forEach(role -> {
-                stringJoiner.add(
-                        "ROLE_" + role.getName()); // custom thay vi dung mac dinh SCOPE_ thi dung ROLE_ cho quen thuoc
-                if (!CollectionUtils.isEmpty(role.getPermissions())) // check permissions
-                    role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
-            });
+        user.getRoles().forEach(role -> {
+            stringJoiner.add(
+                    "ROLE_" + role.getName()); // custom thay vi dung mac dinh SCOPE_ thi dung ROLE_ cho quen thuoc
+            if (!CollectionUtils.isEmpty(role.getPermissions())) // check permissions
+            role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+        });
         return stringJoiner.toString();
     }
 }

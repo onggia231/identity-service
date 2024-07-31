@@ -20,14 +20,14 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 // Kích hoạt bảo mật web toàn diện, cấu hình các quyền truy cập và xác thực người dùng trên toàn bộ ứng dụng web.
 @EnableWebSecurity
-// Kích hoạt bảo mật phương thức cho phép kiểm soát quyền truy cập ở mức phương thức cụ thể, sử dụng các chú thích như @PreAuthorize và @Secured.
+// Kích hoạt bảo mật phương thức cho phép kiểm soát quyền truy cập ở mức phương thức cụ thể, sử dụng các chú thích như
+// @PreAuthorize và @Secured.
 @EnableMethodSecurity
-
 public class SecurityConfig {
 
     // endpoint khong can authentication
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
+        "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
     };
 
     @Autowired
@@ -43,17 +43,16 @@ public class SecurityConfig {
 
         // Cấu hình bảo mật OAuth2
         // Khi thuc hien 1 request can khai them token
-        httpSecurity.oauth2ResourceServer(
-                oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
-                                //  decoder(customJwtDecoder) cung cấp một JwtDecoder tùy chỉnh để giải mã các JWT.
-                                //  Điều này cho phép bạn kiểm tra tính hợp lệ của token và giải mã nó.
-                                .decoder(customJwtDecoder)
-                                // Cung cấp một JwtAuthenticationConverter tùy chỉnh để chuyển đổi từ JWT thành đối tượng Authentication mà Spring Security sử dụng
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                        //  xử lý các lỗi xác thực, chẳng hạn như khi token không hợp lệ hoặc không có token, bằng cách trả về mã lỗi HTTP 401 (Unauthorized)
-                        .authenticationEntryPoint(
-                                new JwtAuthenticationEntryPoint())
-        );
+        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
+                        //  decoder(customJwtDecoder) cung cấp một JwtDecoder tùy chỉnh để giải mã các JWT.
+                        //  Điều này cho phép bạn kiểm tra tính hợp lệ của token và giải mã nó.
+                        .decoder(customJwtDecoder)
+                        // Cung cấp một JwtAuthenticationConverter tùy chỉnh để chuyển đổi từ JWT thành đối tượng
+                        // Authentication mà Spring Security sử dụng
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                //  xử lý các lỗi xác thực, chẳng hạn như khi token không hợp lệ hoặc không có token, bằng cách trả về
+                // mã lỗi HTTP 401 (Unauthorized)
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
         // Tắt bảo vệ CSRF
         // Tắt bảo vệ chống Cross-Site Request Forgery (CSRF)
@@ -66,12 +65,14 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        corsConfiguration.addAllowedOrigin("*"); //  Cho phép tất cả các nguồn (origins) truy cập vào tài nguyên của ứng dụng
+        corsConfiguration.addAllowedOrigin(
+                "*"); //  Cho phép tất cả các nguồn (origins) truy cập vào tài nguyên của ứng dụng
         corsConfiguration.addAllowedMethod("*"); // Cho phép tất cả các phương thức HTTP như GET, POST, PUT, DELETE
         corsConfiguration.addAllowedHeader("*"); // Cho phép tất cả các tiêu đề HTTP trong yêu cầu
 
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        // registerCorsConfiguration("/**", corsConfiguration) Điều này có nghĩa là cấu hình CORS được áp dụng cho tất cả các yêu cầu đến ứng dụng
+        // registerCorsConfiguration("/**", corsConfiguration) Điều này có nghĩa là cấu hình CORS được áp dụng cho tất
+        // cả các yêu cầu đến ứng dụng
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 
         return new CorsFilter(urlBasedCorsConfigurationSource);
@@ -101,14 +102,13 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
-
 }
 
 /*
 Nhiệm Vụ:
-    Cấu Hình Bảo Mật: SecurityConfig cấu hình các quy tắc bảo mật cho ứng dụng, bao gồm việc phân quyền truy cập và cấu hình OAuth2.
+	Cấu Hình Bảo Mật: SecurityConfig cấu hình các quy tắc bảo mật cho ứng dụng, bao gồm việc phân quyền truy cập và cấu hình OAuth2.
 Luồng Hoạt Động:
-    Cấu Hình Quy Tắc Truy Cập: Định nghĩa các quy tắc phân quyền, cho phép hoặc từ chối truy cập các endpoint dựa trên phương thức và URL.
-    Cấu Hình OAuth2: Đặt cấu hình cho OAuth2 Resource Server để sử dụng JWT và xử lý các lỗi xác thực.
-    Tắt CSRF: Tắt bảo vệ CSRF (Cross-Site Request Forgery) nếu không cần thiết.
+	Cấu Hình Quy Tắc Truy Cập: Định nghĩa các quy tắc phân quyền, cho phép hoặc từ chối truy cập các endpoint dựa trên phương thức và URL.
+	Cấu Hình OAuth2: Đặt cấu hình cho OAuth2 Resource Server để sử dụng JWT và xử lý các lỗi xác thực.
+	Tắt CSRF: Tắt bảo vệ CSRF (Cross-Site Request Forgery) nếu không cần thiết.
 */
