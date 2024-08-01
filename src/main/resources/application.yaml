@@ -6,8 +6,8 @@ server:
 spring:
   datasource:
     # Các biến DBMS_CONNECTION, DBMS_PASSWORD, DBMS_USERNAME được khai ở IdentityServiceApplication -> Environment Variables
-    # url: "jdbc:mysql://localhost:3306/identity_service"
-    url: ${DBMS_CONNECTION:jdbc:mysql://mysql-8.0.36:3306/identity_service} # thay localhost = mysql-8.0.36 (sql docker)
+    # Spring Boot sẽ sử dụng giá trị mặc định nếu biến môi trường không được thiết lập
+    url: ${DBMS_CONNECTION:jdbc:mysql://mysql-8.0.36:3306/identity_service} # thay localhost = mysql-8.0.36 (sql docker) dùng khi deploy lên docker
     driverClassName: "com.mysql.cj.jdbc.Driver"
     password: ${DBMS_PASSWORD:root}
     username: ${DBMS_USERNAME:root}
