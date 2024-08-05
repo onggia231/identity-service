@@ -55,7 +55,7 @@ Lưu ý:
 
 ## Build Docker image
 ### Build project
-docker build -t identity-service:0.0.1 .
+docker build -t <account>/identity-service:0.0.1 . (tên account trên docker destop - namngoc231)
 ### Run project
 docker run -d identity-service:0.0.1
 
@@ -67,5 +67,18 @@ docker run -d identity-service:0.0.1
 ### Run your application in devteria-network
 `docker run --name identity-service --network devteria-network -p 8080:8080 -e DBMS_CONNECTION=jdbc:mysql://mysql:3306/identity_service identity-service:0.0.1`
 
+# Publish Docker image lên Docker Hub
+Đăng ký tài khoản trên docker hub rồi login trên docker desktop
+Chạy lệnh để Build Docker image (docker build -t <account>/identity-service:0.0.1 .)
+Chạy: docker image push <account>/identity-service:0.0.1 (de push len docker hub)
+Kiem tra sau khi push:
+ Vao web https://hub.docker.com/ -> Repositories (Xem image da push len)
+Chon Public View -> Docker Pull Command de tai (docker pull namngoc231/identity-service)
+ -> Chay cmd: docker pull namngoc231/identity-service:0.0.1 (kem them version)
+Chay lenh run: docker run --name identity-service --network devteria-network -p 8080:8080 -e DBMS_CONNECTION=jdbc:mysql://mysql:3306/identity_service namngoc231/identity-service:0.0.1
 
+
+## Các lệnh docker
+docker image ls (xem image dang quan ly)
+docker image rm identity-service:0.0.1 (Xoa REPOSITORY:TAG)
 
