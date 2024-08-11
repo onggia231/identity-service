@@ -56,18 +56,23 @@ Lưu ý:
     - Luu y bien moi truong khi deploy phai khai ro ra moi khong bi loi
 
 ## Build Docker image
+
+Đầu tiên config file Dockerfile rồi mới chạy lệnh dưới 
+
 ### Build project
 docker build -t <account>/identity-service:0.0.1 . (tên account trên docker destop - namngoc231)
 ### Run project
-docker run -d identity-service:0.0.1
+docker run -d <account>/identity-service:0.0.1
 
 ## Docker guideline
 ### Create network:
 `docker network create devteria-network` (co the doi ten khac namngoc-network - tạo 1 network để kết nối đến docker)
 ### Start MySQL in devteria-network ( run Sql docker với network đã tạo)
+
 `docker run --network devteria-network --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql:8.0.36-debian`
+- Kiem tra xem mysql da create database chua
 ### Run your application in devteria-network
-`docker run --name identity-service --network devteria-network -p 8080:8080 -e DBMS_CONNECTION=jdbc:mysql://mysql:3306/identity_service identity-service:0.0.1`
+`docker run --name identity-service --network devteria-network -p 8080:8080 -e DBMS_CONNECTION=jdbc:mysql://mysql:3306/identity_service <account>/identity-service:0.0.1`
 
 # Publish Docker image lên Docker Hub
 Đăng ký tài khoản trên docker hub rồi login trên docker desktop
