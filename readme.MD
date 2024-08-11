@@ -38,6 +38,7 @@ Mở Terminal rồi chạy lệnh (Thêm ./ hoặc không thêm ./ xem cái nào
 
 ./mvnw package (chạy lệnh build)  | mvn package
 
+Hoac muon bo test thi chay lenh duoi
 ./mvnw package -DskipTests (bỏ test) | mvn package -DskipTests
 
 -> cd .\target\
@@ -52,6 +53,7 @@ Lưu ý:
     - File build đang chạy muốn thoát bấm Ctrl + c
     - Cần cài môi trường java để chạy file jar
     - Chạy Terminal: mvn spotless:apply nếu muốn format code trước khi buid để tránh lỗi
+    - Luu y bien moi truong khi deploy phai khai ro ra moi khong bi loi
 
 ## Build Docker image
 ### Build project
