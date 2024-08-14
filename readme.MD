@@ -89,3 +89,62 @@ Chay lenh run: docker run --name identity-service --network devteria-network -p 
 docker image ls (xem image dang quan ly)
 docker image rm identity-service:0.0.1 (Xoa REPOSITORY:TAG)
 
+
+### Dang ky EC2 va login Termius bang key va host cua Ec2
+1. Link EC2: https://ap-southeast-2.console.aws.amazon.com/ec2/home?region=ap-southeast-2#Home:
+2. Chọn địa điểm gần mình ở góc phải màn hình: Vd: Tokyo
+3. Click Launch instance -> Name (devteria) -> Quick Start (ubuntu) -> Instance type (t2.micro Free tier eligible - Ko ton phi)
+   -> Key pair (login)  (Neu chua co click Create new key pair (Key pair name: aws) de tao key - Sd de login vao Termius ) Dang de folder: D:\Setting Environment\Key pair
+   -> Configure storage (1x15Gib)
+4. Quay lai tab Instances de check xem cai vua tao
+5. Muon Stop hay xoa may ao thi vao Instance ID -> Instance state (Stop instance: Dung may ao lai, Terminate instance: Xoa may ao)
+6. Vao Termius -> Keychain -> SSH Key -> Import from key file (D:\Setting Environment\Key pair)
+7. Host ->  Create host -> Address (Paste Public IPv4 address hoac Public IPv4 DNS trong muc Instance EC2 aws) -> Connect
+   -> Dien Username (ubuntu) -> Continue & Save -> Add % continue -> Chon key aws.pem -> Continue & Save
+
+### Tu EC2 voi MySql cai tren Ubuntu qua Termius se Expose ra ngoai de MySql Workbench ket noi duoc
+1. Instances -> Security -> Security groups -> Inbound rules (Port range: 22) -> Edit inbound rules -> Add rule -> Custom TCP (3306 trung port ma run MySql)
+   -> CIDR blocks (Text field canh Custom - Chon: 0.0.0.0/0) -> Save rules
+2. Lay Public IPv4 address (Instances) vao MySql Workbench ket noi den
+3. Vao MySql Workbench tao database: create database identity_service;
+
+### Lay code da push len docker hub: https://hub.docker.com/
+1. Vao docker hub -> Chon service da tao -> Public View -> Chon tab Tags
+   -> Copy cau lenh pull -> Chay sudo docker pull namngoc231/identity-service:0.0.1 tren Termius
+2. Chay Termius tiep: sudo docker run --name identity-service --network devteria-network -p 8080:8080 -e DBMS_CONNECTION=jdbc:mysql://mysql:3306/identity_service namngoc231/identity-service:0.0.1
+
+### Sau khi setup xong muon chay
+1. EC2 -> Instances -> Security -> Security groups -> Inbound rules -> Edit inbound rules -> Add rule -> TCP (8080 giong config tren), CIDR blocks (Chon: 0.0.0.0/0)
+2. Mo Postman test: http://52.68.55.32:8080/identity/auth/token (Thay local host = Public IPv4 address)
+3. Ctrl+C : stop service
+4. sudo docker ps -a: kiem tra service
+5. sudo docker start NAMES( vd: identity-service): de start lai docker theo NAMES hoac theo CONTAINER ID
+6. Luu y: Khong dung nen vao EC2 -> Instance state (Stop instance: Dung may ao lai, Terminate instance: Xoa may ao)
+
+### Cai moi truong tren Ubuntu
+1. Cai Docker: Chay lan luot cac lenh duoi (ctrl+shift+v de dan)
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+# Add the repository to Apt sources:
+echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+sudo docker run hello-world
+2. Cai Mysql
+   sudo docker network create devteria-network
+   sudo docker run --network devteria-network --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql:8.0.36-debian
+   sudo docker ps -a (De xem list docker dang chay)
+   sudo docker rm <name>
+
+### Kiem tra bo nho may ao
+1. Chay ubuntu lenh: htop (Xem CPU, Mem, Swp) - bam ctrl+c de thoat
+
